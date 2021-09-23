@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Softhood API Generator</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="icons/font/bootstrap-icons.css">
+
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="row d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-8">
+            <div class="card shadow-sm py-5">
+                <div class="card-header text-center pb-4">
+                    <h4 class="display-6">Softhood API Keys Generator</h4>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <div class="col-md-10 mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><button class="btn btn-primary btn-sm" id="genPrv">Generate Private Key</button></span>
+                            <input type="text" id="privatekey" class="form-control" value="">
+                            <span class="input-group-text" style="cursor:pointer;"><i class="bi bi-clipboard" id="copyPrv"></i></span>
+                        </div>
+
+                    </div>
+                    <div class="col-md-10 mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><button class="btn btn-primary btn-sm" id="genPub">Generate Public Key</button></span>
+                            <input type="text" id="publickey" class="form-control" value="">
+                            <span class="input-group-text" style="cursor:pointer;"><i class="bi bi-clipboard" id="copyPub"></i></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" >
+            <div class="toast-header">
+                <strong class="me-auto">Copied</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+               Key has been copied to clipboard.
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+window.onload =  ()=>{
+    document.getElementById('publickey').value = generatePubKey();
+    document.getElementById('privatekey').value = generatePrvKey();
+}
+    function generatePubKey()
+    {
+        var d = new Date().getTime();
+
+        if( window.performance && typeof window.performance.now === "function" )
+        {
+            d += performance.now();
+        }
+
+        return  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c)
+        {
+            var r = (d + Math.random()*16)%16 | 0;
+            d = Math.floor(d/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(20);
+        });
+
+    }
+function generatePrvKey() {
+    var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+     var length = 40;
+    var result = '';
+    for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
+}
+
+function copyKey(selector){
+    /* Get the text field */
+    var copyText = document.getElementById(selector);
+
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+    /* Copy the text inside the text field */
+    navigator.clipboard.writeText(copyText.value);
+
+    /* Alert the copied text */
+    // alert("Copied the text: " + copyText.value);
+    var myAlert =document.getElementById('liveToast');//select id of toast
+    var bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+    bsAlert.show();//show it
+}
+
+document.getElementById('genPub').addEventListener('click', ()=>{
+document.getElementById('publickey').value = generatePubKey();
+})
+document.getElementById('genPrv').addEventListener('click', ()=>{
+    document.getElementById('privatekey').value = generatePrvKey();
+})
+document.getElementById('copyPrv').addEventListener('click', ()=>{
+    copyKey('privatekey')
+})
+document.getElementById('copyPub').addEventListener('click', ()=>{
+    copyKey('publickey')
+})
+
+
+
+</script>
+</body>
+</html>
